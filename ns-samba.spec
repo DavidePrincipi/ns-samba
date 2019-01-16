@@ -2,6 +2,7 @@ Name: ns-samba
 Version: 4.8.6
 Release: 1%{?dist}
 Summary: Namespaced Samba AD domain controller
+Autoreqprov: 0
 
 License: GPLv3+
 URL: %{url_prefix}/%{name}
@@ -23,8 +24,7 @@ BuildRequires: pam-devel
 BuildRequires: pygpgme
 BuildRequires: python-devel
 BuildRequires: systemd-devel
-
-
+BuildRequires: bind-utils, bind-devel
 
 BuildRequires: systemd
 Requires(post): systemd
