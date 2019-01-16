@@ -2,7 +2,7 @@ Name: ns-samba
 Version: 4.8.6
 Release: 1%{?dist}
 Summary: Namespaced Samba AD domain controller
-Autoreqprov: 0
+Autoprov: 0
 
 License: GPLv3+
 URL: %{url_prefix}/%{name}
