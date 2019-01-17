@@ -46,8 +46,11 @@ interface and it can coexists with the existing samba daemons.
 %build
 cd %{_builddir}/samba-%{version}
 
-# /var/lib/ns-samba/locks/sysvol
-# /opt/ns-samba/private/
+# FIXME:
+# /var/lib/ns-samba/locks/sysvol => ???
+# /opt/ns-samba/private/ => /var/lib/ns-samba/private
+# /opt/ns-samba/bind-dns/ => /var/lib/ns-samba/... /var/spool...
+# /etc/ns-samba => /etc/opt/ns-samba (FHS)
 
 ./configure --prefix=/opt/%{name} --localstatedir=/var/lib/%{name} --sysconfdir=/etc/%{name} --with-systemd
 make %{?_smp_mflags}
