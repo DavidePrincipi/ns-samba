@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+export PATH=/opt/ns-samba/sbin:/opt/ns-samba/bin:$PATH
+
+exec unshare -u -m /usr/bin/bash -s "$@" <<'EOF'
+if [[ -n ${PRIVNS_HOSTNAME} ]]; then
+    hostname ${PRIVNS_HOSTNAME}
+fi
+mount --bind /etc/ns-samba/resolv.conf /etc/resolv.conf
+exec "$@"
+EOF

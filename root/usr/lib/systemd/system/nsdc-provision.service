@@ -1,0 +1,14 @@
+[Unit]
+# Ensure network is configured
+Requires=nsdc-bridge.service
+After=nsdc-bridge.service
+ConditionPathExists=!/etc/ns-samba/smb.conf
+
+# Join the "nsdc" named network namespace that netns@ created
+JoinsNamespaceOf=nsdc-network.service
+
+[Service]
+PrivateNetwork=yes
+Type=oneshot
+EnvironmentFile=/etc/ns-samba/nsdc.conf
+ExecStart=/opt/ns-samba/bin/nsdc-run /opt/ns-samba/bin/samba-tool domain $$SAMBA_PROVISION_OPTIONS

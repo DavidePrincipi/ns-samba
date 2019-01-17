@@ -1,0 +1,22 @@
+[Unit]
+Description=nsdc bridge configuration
+BindsTo=nsdc-network.service
+After=nsdc-network.service
+StopWhenUnneeded=true
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/ns-samba/nsdc.conf
+
+# Set up the bridged veth pair:
+ExecStart=/sbin/ip link add ${ROOTNS_IFNAME} type veth peer name ${PRIVNS_IFNAME}
+ExecStart=/sbin/ip link set ${PRIVNS_IFNAME} netns nsdc
+ExecStart=/sbin/ip link set ${ROOTNS_IFNAME} up
+ExecStart=/sbin/brctl addif ${ROOTNS_BRIDGE} ${ROOTNS_IFNAME}
+ExecStart=/sbin/ip netns exec nsdc ip addr add ${PRIVNS_IFADDR} dev ${PRIVNS_IFNAME}
+ExecStart=/sbin/ip netns exec nsdc ip link set ${PRIVNS_IFNAME} up
+ExecStart=/sbin/ip netns exec nsdc ip route add default via ${PRIVNS_GATEWAY}
+
+# Clean up:
+ExecStop=/sbin/ip link del ${ROOTNS_IFNAME}

@@ -1,0 +1,19 @@
+[Unit]
+Description=nsdc network namespace
+Documentation=https://github.com/systemd/systemd/issues/2741#issuecomment-336736214
+StopWhenUnneeded=true
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+PrivateNetwork=yes
+EnvironmentFile=/etc/ns-samba/nsdc.conf
+
+# Give a name to the private network namespace:
+ExecStart=/sbin/ip netns add nsdc
+ExecStart=/bin/umount /var/run/netns/nsdc
+ExecStart=/bin/mount --bind /proc/self/ns/net /var/run/netns/nsdc
+ExecStart=/sbin/ip netns exec nsdc ip link set lo up
+
+# Clean up the private and root network namespaces when we are done
+ExecStop=/sbin/ip netns delete nsdc

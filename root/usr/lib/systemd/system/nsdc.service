@@ -1,15 +1,14 @@
 [Unit]
 Description=Namespaced Samba domain controller
-After=syslog.target network.target
-ConditionPathExists=/var/lib/samba/private/krb5.conf
-ConditionPathExists=/etc/samba/smb.conf
+BindsTo=nsdc-bridge.service
+Wants=nsdc-provision.service
+After=nsdc-bridge.service nsdc-provision.service
+JoinsNamespaceOf=nsdc-network.service
+ConditionPathExists=/etc/ns-samba/smb.conf
 
 [Service]
+PrivateNetwork=yes
 LimitNOFILE=16384
-EnvironmentFile=-/etc/sysconfig/samba
-ExecStart=/usr/sbin/samba $SAMBAOPTIONS -i --debug-stderr
-ExecReload=/usr/bin/kill -HUP $MAINPID
-SuccessExitStatus=127
-
-[Install]
-WantedBy=multi-user.target
+Type=forking
+EnvironmentFile=/etc/ns-samba/nsdc.conf
+ExecStart=/opt/ns-samba/bin/nsdc-run /opt/ns-samba/sbin/samba -D

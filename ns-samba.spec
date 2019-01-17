@@ -12,11 +12,9 @@ Source1: https://download.samba.org/pub/samba/stable/samba-%{version}.tar.gz
 BuildRequires: docbook-xsl
 BuildRequires: gnutls-devel
 BuildRequires: gpgme-devel
-BuildRequires: jansson
 BuildRequires: jansson-devel
 BuildRequires: libacl-devel
 BuildRequires: libarchive-devel
-BuildRequires: lmdb
 BuildRequires: lmdb-devel
 BuildRequires: nethserver-devtools
 BuildRequires: openldap-devel
@@ -25,6 +23,10 @@ BuildRequires: pygpgme
 BuildRequires: python-devel
 BuildRequires: systemd-devel
 BuildRequires: bind-utils, bind-devel
+BuildRequires: libtalloc-devel
+BuildRequires: libtevent-devel
+BuildRequires: libtdb-devel
+
 
 BuildRequires: systemd
 Requires(post): systemd
@@ -43,6 +45,10 @@ interface and it can coexists with the existing samba daemons.
 
 %build
 cd %{_builddir}/samba-%{version}
+
+# /var/lib/ns-samba/locks/sysvol
+# /opt/ns-samba/private/
+
 ./configure --prefix=/opt/%{name} --localstatedir=/var/lib/%{name} --sysconfdir=/etc/%{name} --with-systemd
 make %{?_smp_mflags}
 
